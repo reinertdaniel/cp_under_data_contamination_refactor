@@ -8,6 +8,9 @@ This code was developed using Python 3.9.12. Please start by installing the requ
 
 ## Classification
 ### Synthetic Data
+
+(Results are already included, you can skip straight to the notebook)
+
 To reproduce the results with the synthetic data, use the command
 
 ```
