@@ -12,6 +12,8 @@ from robust_cp import compute_adjusted_i, ScoreECDF
 from aps import ProbabilityAccumulator, make_aps_sets
 from dataset.synthetic_datasets import generate_logistic, generate_hypercube
 
+from nacp import NACP_aps
+
 _synthetic_datasets = ['logistic', 'hypercube']
 _real_datasets = ['CIFAR10N']
 
@@ -115,8 +117,13 @@ def run_experiment(seed,
                                     fhat,
                                     np.linalg.inv(P), p, p_tilde)
 
+    NACPres = NACP_aps(cal_probs, y_cal, test_probs, y_test, 
+                           n_calib=n_cal, alpha=alpha,noise_rate=eps)
+    i_nacp = int(np.floor(NACPres['qhat'] * n_cal))
+    # print("adj i", i_adjusted, i_nacp)
+    
     results = {}
-    for name, ix in [('cp', i), ('cp_adjusted', i_adjusted)]:
+    for name, ix in [('cp', i), ('cp_adjusted', i_adjusted), ('nacp', i_nacp)]:
         qhat = score_ord_stats[ix]
         prediction_sets = make_aps_sets(qhat, test_probs)
         cvg = np.mean([y_test[i] in prediction_sets[i] for i in range(len(y_test))])
